@@ -1,0 +1,93 @@
+{
+  "AWSEBDockerrunVersion": 2,
+  "containerDefinitions": [{
+      "essential": true,
+      "image": "475640161247.dkr.ecr.ap-northeast-2.amazonaws.com/myapp",
+      "name": "app",
+      "environment": [{
+          "name": "TYPEORM_NAME",
+          "value": "${TYPEORM_NAME}"
+        },
+        {
+          "name": "TYPEORM_HOST",
+          "value": "mariadb"
+        },
+        {
+          "name": "TYPEORM_TYPE",
+          "value": "${TYPEORM_TYPE}"
+        },
+        {
+          "name": "TYPEORM_USERNAME",
+          "value": "${TYPEORM_USERNAME}"
+        },
+        {
+          "name": "TYPEORM_PASSWORD",
+          "value": "${TYPEORM_PASSWORD}"
+        },
+        {
+          "name": "TYPEORM_DATABASE",
+          "value": "${TYPEORM_DATABASE}"
+        },
+        {
+          "name": "TYPEORM_PORT",
+          "value": "${TYPEORM_PORT}"
+        },
+        {
+          "name": "TYPEORM_ENTITIES",
+          "value": "${TYPEORM_ENTITIES}"
+        },
+        {
+          "name": "TYPEORM_MIGRATIONS_RUN",
+          "value": "false"
+        },
+        {
+          "name": "TYPEORM_SYNCHRONIZE",
+          "value": "false"
+        },
+      ],
+      "portMappings": [{
+        "containerPort": 8000,
+        "hostPort": 8000
+      }],
+      "links": ["db"]
+    },
+    {
+      "command": [
+        "mysqld",
+        "--character-set-server=utf8mb4",
+        "--collation-server=utf8mb4_unicode_ci"
+      ],
+      "environment": [{
+          "name": "MYSQL_DATABASE",
+          "value": "${TYPEORM_DATABASE}"
+        },
+        {
+          "name": "MYSQL_USER",
+          "value": "${TYPEORM_USERNAME}"
+        },
+        {
+          "name": "MYSQL_ROOT_PASSWORD",
+          "value": "${TYPEORM_PASSWORD}"
+        }
+      ],
+      "essential": true,
+      "image": "mysql:5.7",
+      "mountPoints": [{
+        "containerPath": "/var/lib/mysql",
+        "sourceVolume": "_Db"
+      }],
+      "name": "db",
+      "portMappings": [{
+        "containerPort": 3306,
+        "hostPort": 3306
+      }]
+    }
+  ],
+  "family": "",
+  "volumes": [{
+    "host": {
+      "sourcePath": "./db"
+    },
+    "name": "_Db"
+  }]
+}
